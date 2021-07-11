@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi8/openjdk-11
+FROM adoptopenjdk/openjdk8-openj9 
 RUN apt-get update && \
     apt-get install -y maven unzip
 
