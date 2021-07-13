@@ -7,6 +7,7 @@ RUN apt-get update && \
 COPY . /project
 WORKDIR /project
 
+RUN ls 
 #RUN mvn -X initialize process-resources verify => to get dependencies from maven
 #RUN mvn clean package	
 #RUN mvn --version
