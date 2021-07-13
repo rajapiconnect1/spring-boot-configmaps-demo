@@ -14,5 +14,5 @@ RUN ls target
 RUN pwd
 
 #ARG JAR_FILE=target/*.jar
-COPY /target/*.jar app.jar
-ENTRYPOINT ["java","-jar","app.jar"]
+COPY target/spring-boot-configmaps-demo-0.0.1-SNAPSHOT.jar  /app.jar
+ENTRYPOINT ["java","-jar","/app.jar"]
