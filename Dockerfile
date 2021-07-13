@@ -1,5 +1,5 @@
-#FROM adoptopenjdk/openjdk8-openj9 
-FROM openjdk:8-jdk-alpine
+FROM adoptopenjdk/openjdk8-openj9 
+#FROM openjdk:8-jdk-alpine
 
 RUN apt-get update && \
     apt-get install -y maven unzip
