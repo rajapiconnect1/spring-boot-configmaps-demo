@@ -29,7 +29,7 @@ pipeline {
          stage('Deploy') { 
             steps {
                 echo 'Deploying application into OCP'
-                sh 'oc login --token=sha256~2QKCZHOvLdkT6Zcq5B1l47Uw2GIKxes7dgYAM-9bOxc --server=https://api.sandbox.x8i5.p1.openshiftapps.com:6443 '
+                sh 'oc login --token=sha256~EjkfP8L5Wg5p85f_9_Hrgrc19u8WkfwF9GpWQ7DowtY --server=https://api.sandbox.x8i5.p1.openshiftapps.com:6443'
                 
                 sh '''
                     status=$?
