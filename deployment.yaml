@@ -15,7 +15,7 @@ spec:
         app: springboot-configmaps-demo
     spec:
       containers:
-      - image: rajapiconnect1/spring-boot-configmaps-demo 
+      - image: rajapiconnect1/springboot-configmaps-demo
         name: springboot-configmaps-demo
         imagePullPolicy: Always
         ports:
