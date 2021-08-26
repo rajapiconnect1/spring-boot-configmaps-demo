@@ -13,7 +13,7 @@ spec:
     - name: 8080-tcp
       protocol: TCP
       port: 8080
-      targetPort: 8080
+      targetPort: 10080
     - name: 8443-tcp
       protocol: TCP
       port: 8443
