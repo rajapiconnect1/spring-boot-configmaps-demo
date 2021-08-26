@@ -1,11 +1,21 @@
-FROM openjdk:8-jdk-alpine
+FROM adoptopenjdk/openjdk8-openj9 
+#FROM openjdk:8-jdk-alpine
 
-VOLUME /tmp
+RUN apt-get update && \
+    apt-get install -y maven unzip
 
-EXPOSE 8080
+COPY . /project
+WORKDIR /project
 
-ARG JAR_FILE=target/spring-boot-configmaps-demo-0.0.1-SNAPSHOT.jar
+RUN ls 
+#RUN mvn -X initialize process-resources verify => to get dependencies from maven
+#RUN mvn clean package	
+#RUN mvn --version
+RUN mvn clean package
 
-ADD ${JAR_FILE} spring-boot-configmaps-demo-0.0.1-SNAPSHOT.jar
+RUN ls target
+RUN pwd
 
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/spring-boot-configmaps-demo-0.0.1-SNAPSHOT.jar"]
+#ARG JAR_FILE=target/*.jar
+RUN  cp ./target/spring-boot-configmaps-demo-0.0.1-SNAPSHOT.jar  /app.jar
+ENTRYPOINT ["java","-jar","/app.jar"]
