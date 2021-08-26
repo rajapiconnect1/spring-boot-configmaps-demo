@@ -1,18 +1,18 @@
 pipeline {
     agent any
+    
     parameters {
         string(name: 'PROJECT', defaultValue: 'https://github.com/rajapiconnect1/spring-boot-configmaps-demo.git', description: 'Enter Project anme ')
-        string(name: 'SERVICE_NAME', defaultValue: 'defaultService', description: 'Enter Project anme ')
+               
+        string(name: 'SERVICE_NAME', defaultValue: 'springboot-configmaps-demo', description: 'Enter Project anme ')
 
         }
     stages {
         stage('Checkout') {
             steps {
 
-                 echo "Hello ${params.PROJECT}"
-
-
-               checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/rajapiconnect1/dynacachetest.git']]])
+                 echo "Hello ${params.PROJECT} "
+               checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: 'https://github.com/rajapiconnect1/spring-boot-configmaps-demo.git']]])
 	
             }
         }    
@@ -26,48 +26,30 @@ pipeline {
         stage('Dockerize') { 
             steps {
                 echo 'Dockerizing application'
-                sh 'docker build -t rajapiconnect1/rajdynacachetest .'
+                
                 sh 'docker logout'
                 sh 'docker login -u rajapiconnect1 -p "Rajesh@3200" docker.io'
-                sh 'docker tag rajapiconnect1/rajdynacachetest rajapiconnect1/rajdynacachetest'
-                sh 'docker push rajapiconnect1/rajdynacachetest'
+                sh "docker build -t rajapiconnect1/${params.SERVICE_NAME} ."
+                sh "docker tag rajapiconnect1/${params.SERVICE_NAME} rajapiconnect1/${params.SERVICE_NAME}"
+                sh "docker push rajapiconnect1/${params.SERVICE_NAME}"
             }
         }
 
          stage('Deploy') { 
+
             steps {
-                echo 'Deploying application into OCP'
+                echo 'Deploying application into OCP ....'
                 sh "oc login --token=${params.OCTOKEN} --server=https://api.sandbox.x8i5.p1.openshiftapps.com:6443"
                 
-                sh '''
-                    status=$?
-                    cmd="oc delete deployment rajdynacachetest"
-                    if [ $cmd -eq 0 ]
-                    then
-                        echo "Success: Deployment Deleted"
-                    else
-                        echo "Failure: Deployment is not found "
-                    fi
-
-                    cmd="oc delete service rajdynacachetest"
-                    if [ $cmd -eq 0 ]
-                    then
-                        echo "Success: Service Deleted"
-                    else
-                        echo "Failure: Service is not found "
-                    fi
-                    
-                    
-                '''
                 
                 
-                sh 'oc create -f deployment.yaml' 
+                sh "oc create -f ${env.WORKSPACE}/deployment.yaml"
 
                 timeout(time: 1, unit: 'MINUTES') {
                     
                 }
 
-                sh 'oc create -f service.yaml' 
+                sh "oc create -f ${env.WORKSPACE}/service.yaml"
 
                 timeout(time: 1, unit: 'MINUTES') {
                     
@@ -77,6 +59,13 @@ pipeline {
 
                 timeout(time: 1, unit: 'MINUTES') {
                     
+                }
+
+                try {
+                    // Fails with non-zero exit if dir1 does not exist
+                    def dir1 = sh(script:'ls -la .', returnStdout:true).trim()
+                } catch (Exception ex) {
+                    println("Unable to read dir1: ${ex}")
                 }
             }
         }
