@@ -19,11 +19,11 @@ spec:
         name: springboot-configmaps-demo
         imagePullPolicy: Always
         ports:
+            - containerPort: 8080
+              protocol: TCP
+            - containerPort: 9443
+              protocol: TCP
             - containerPort: 9080
-              protocol: TCP
-            - containerPort: 8443
-              protocol: TCP
-            - containerPort: 8778
               protocol: TCP
         envFrom:
             - configMapRef:
