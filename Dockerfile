@@ -16,7 +16,8 @@ FROM openliberty/open-liberty:full-java11-openj9-ubi
 ARG VERSION=1.0
 ARG REVISION=SNAPSHOT
 
-RUN cp ./src/main/liberty/config/server.xml /config/server.xml
+COPY --chown=1001:0 src/main/liberty/config /config/
+
 
 COPY --chown=1001:0 --from=staging /staging/lib.index.cache /lib.index.cache
 COPY --chown=1001:0 --from=staging /staging/thin-spring-boot-configmaps-demo-0.0.1-SNAPSHOT.jar  \
@@ -24,3 +25,5 @@ COPY --chown=1001:0 --from=staging /staging/thin-spring-boot-configmaps-demo-0.0
 
 RUN configure.sh 
 
+
+RUN features.sh
