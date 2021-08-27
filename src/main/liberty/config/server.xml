@@ -3,7 +3,7 @@
 
     <featureManager>
         <feature>servlet-4.0</feature>
-        <feature>springBoot-2.0</feature>
+        <feature>springBoot-1.5</feature>
     </featureManager>
 
     <httpEndpoint id="defaultHttpEndpoint"
