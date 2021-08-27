@@ -1,21 +1,26 @@
-FROM adoptopenjdk/openjdk8-openj9 
-#FROM openjdk:8-jdk-alpine
 
-RUN apt-get update && \
-    apt-get install -y maven unzip
+# Stage and thin the application 
+FROM openliberty/open-liberty:full-java11-openj9-ubi as staging
 
-COPY . /project
-WORKDIR /project
+COPY --chown=1001:0 target/spring-boot-configmaps-demo-0.0.1-SNAPSHOT.jar \
+                    /staging/fat-spring-boot-configmaps-demo-0.0.1-SNAPSHOT.jar
 
-RUN ls 
-#RUN mvn -X initialize process-resources verify => to get dependencies from maven
-#RUN mvn clean package	
-#RUN mvn --version
-RUN mvn clean package
+RUN springBootUtility thin \
+ --sourceAppPath=/staging/fat-spring-boot-configmaps-demo-0.0.1-SNAPSHOT.jar \
+ --targetThinAppPath=/staging/thin-spring-boot-configmaps-demo-0.0.1-SNAPSHOT.jar \
+ --targetLibCachePath=/staging/lib.index.cache
 
-RUN ls target
-RUN pwd
+# Build the image
+FROM openliberty/open-liberty:full-java11-openj9-ubi
 
-#ARG JAR_FILE=target/*.jar
-RUN  cp ./target/spring-boot-configmaps-demo-0.0.1-SNAPSHOT.jar  /app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+ARG VERSION=1.0
+ARG REVISION=SNAPSHOT
+
+RUN cp ./src/main/liberty/config/server.xml /config/server.xml
+
+COPY --chown=1001:0 --from=staging /staging/lib.index.cache /lib.index.cache
+COPY --chown=1001:0 --from=staging /staging/thin-spring-boot-configmaps-demo-0.0.1-SNAPSHOT.jar  \
+                    /config/dropins/spring/thin-spring-boot-configmaps-demo-0.0.1-SNAPSHOT.jar
+
+RUN configure.sh 
+
