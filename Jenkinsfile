@@ -10,25 +10,25 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                ws("${params.PROJECT}"){
+               
 
-                    echo "Hello ${params.PROJECT} "
-                    checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: "${params.GIT_URL}"]]])
-                }
+                echo "Hello ${params.PROJECT} "
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: "${params.GIT_URL}"]]])
+            
             }
         }    
         stage('Build') { 
             steps {
-                   ws("${params.PROJECT}"){
-                    echo 'Hello World!!!'
-                    sh 'mvn clean package' 
-                   }
+                  
+                echo 'Hello World!!!'
+                sh 'mvn clean package' 
+            
             }
         }
 
         stage('Dockerize') { 
             steps {
-                ws("${params.PROJECT}"){
+               
                     echo 'Dockerizing application'
                     
                     sh 'docker logout'
@@ -36,37 +36,24 @@ pipeline {
                     sh "docker build -t rajapiconnect1/${params.SERVICE_NAME} ."
                     sh "docker tag rajapiconnect1/${params.SERVICE_NAME} rajapiconnect1/${params.SERVICE_NAME}"
                     sh "docker push rajapiconnect1/${params.SERVICE_NAME}"
-                    timeout(time: 1, unit: 'MINUTES') {
-                        
-                    }
-                }
-            }   
                 
-                ws("${params.PROJECT}"){ 
                     sh "oc create -f ${env.WORKSPACE}/deployment.yaml"
 
-                    timeout(time: 1, unit: 'MINUTES') {
-                        
-                    }
-
+                   
                     sh "oc create -f ${env.WORKSPACE}/service.yaml"
 
-                    timeout(time: 1, unit: 'MINUTES') {
-                        
-                    }
-
+                   
                     sh "oc expose service/${params.SERVICE_NAME}"
 
-                    timeout(time: 1, unit: 'MINUTES') {
-                        
-                    }
+                    
 
                     sh "oc get routes"
-                }
                
-            }
+                
+            }   
+                
+               
         }
-
     }
 }
 
