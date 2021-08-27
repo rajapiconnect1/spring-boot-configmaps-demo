@@ -26,4 +26,3 @@ COPY --chown=1001:0 --from=staging /staging/thin-spring-boot-configmaps-demo-0.0
 RUN configure.sh 
 
 
-RUN features.sh
