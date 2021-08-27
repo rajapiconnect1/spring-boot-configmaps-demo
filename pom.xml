@@ -12,7 +12,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.7.RELEASE</version>
+		<version>2.4.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -46,10 +46,24 @@
 
 	<build>
 		<plugins>
+
+		 <!-- Enable Liberty Maven plugin -->
+		<plugin>
+			<groupId>io.openliberty.tools</groupId>
+			<artifactId>liberty-maven-plugin</artifactId>
+			<version>3.3.4</version>
+			<configuration>
+			<appsDirectory>apps</appsDirectory>
+			<installAppPackages>spring-boot-project</installAppPackages>
+			</configuration>
+		</plugin>
+		<!-- End of Liberty Maven plugin -->
+
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			
       <plugin>
         <groupId>io.fabric8</groupId>
         <artifactId>fabric8-maven-plugin</artifactId>
