@@ -4,9 +4,6 @@
     <featureManager>
         <feature>servlet-4.0</feature>
         <feature>springBoot-2.0</feature>
-         <feature>beanValidation-1.1</feature>
-        <feature>cdi-2.0</feature>
-        <feature>jaxrs-2.1</feature>
     </featureManager>
 
     <httpEndpoint id="defaultHttpEndpoint"
@@ -21,9 +18,6 @@
     <variable defaultValue="*" name="httpEndpoint_host_1"/>
         
     <variable defaultValue="9443" name="httpEndpoint_secure_port_1"/>
-
-<!-- Added this line to expose port -->
-    <httpEndpoint host="*" httpPort="8080" httpsPort="-1"/>
 
 
 </server>   
