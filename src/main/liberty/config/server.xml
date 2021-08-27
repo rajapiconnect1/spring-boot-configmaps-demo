@@ -14,13 +14,7 @@
                   httpPort="9080"
                   httpsPort="9443" />
 
-    <springBootApplication id="springboot-configmaps-demo" 
-                           location="thin-spring-boot-configmaps-demo-0.0.1-SNAPSHOT.jar"
-                           name="springboot-configmaps-demo" >
-            <applicationArgument>--server.context-path=/hello</applicationArgument>
-            <applicationArgument>--server.liberty.use-default-host=false</applicationArgument>
-            <applicationArgument>--management.port=9999</applicationArgument>
-    </springBootApplication>
+
 
      <variable defaultValue="9080" name="httpEndpoint_port_1"/>
         
